@@ -12,8 +12,8 @@ import { AddTemporaryHitPointsDto } from './dto/add-temporary-hit-points.dto';
 export class HpService {
   constructor(@InjectModel(Hp.name) private hpModel: Model<Hp>) {}
 
-  createOrUpdate(id: string, createOrUpdateHpDto: CreateOrUpdateHpDto) {
-    const createdHp = new this.hpModel({
+  async createOrUpdate(id: string, createOrUpdateHpDto: CreateOrUpdateHpDto) {
+    const createOrUpdateParams = {
       _id: id,
       total: createOrUpdateHpDto.hitPoints,
       current: createOrUpdateHpDto.hitPoints,
@@ -30,9 +30,19 @@ export class HpService {
         },
         {} as Record<DamageType, DefenseType>,
       ),
-    });
+    };
 
-    return createdHp.save();
+    const existingHp = await this.findById(id);
+
+    if (!existingHp) {
+      const createdHp = new this.hpModel(createOrUpdateParams);
+      return createdHp.save();
+    }
+
+    existingHp.total = createOrUpdateParams.total;
+    existingHp.current = createOrUpdateParams.current;
+    existingHp.defenses = createOrUpdateParams.defenses;
+    return existingHp.save();
   }
 
   async findById(id: string) {
