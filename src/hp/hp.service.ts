@@ -32,7 +32,7 @@ export class HpService {
       ),
     };
 
-    const existingHp = await this.findById(id);
+    const existingHp = await this.hpModel.findById(id);
 
     if (!existingHp) {
       const createdHp = new this.hpModel(createOrUpdateParams);
