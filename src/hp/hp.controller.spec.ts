@@ -74,13 +74,33 @@ describe('HpController', () => {
   });
 
   describe(':id', () => {
-    it('should return a created or updated HP resource with the given id on PUT', async () => {
+    it('should return a created HP resource with the given id on PUT', async () => {
       const response = await hpController.createOrUpdate('briv', dto);
       expect(databaseMock['briv']).toEqual(response);
       expect(saveMock).toHaveBeenCalled();
       expect(response._id).toBe('briv');
       expect(response.total).toBe(briv.hitPoints);
       expect(response.current).toBe(briv.hitPoints);
+      expect(response.temporary).toBe(0);
+
+      dto.defenses.forEach(({ type, defense }) => {
+        expect(response.defenses[type] === defense);
+      });
+    });
+
+    it('should update a resource if it already exists', async () => {
+      await hpController.createOrUpdate('briv', dto);
+
+      const response = await hpController.createOrUpdate('briv', {
+        ...dto,
+        hitPoints: 30,
+      });
+
+      expect(databaseMock['briv']).toEqual(response);
+      expect(saveMock).toHaveBeenCalled();
+      expect(response._id).toBe('briv');
+      expect(response.total).toBe(30);
+      expect(response.current).toBe(30);
       expect(response.temporary).toBe(0);
 
       dto.defenses.forEach(({ type, defense }) => {
