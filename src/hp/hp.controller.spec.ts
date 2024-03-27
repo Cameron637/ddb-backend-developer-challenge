@@ -75,10 +75,10 @@ describe('HpController', () => {
 
   describe(':id', () => {
     it('should return a created HP resource with the given id on PUT', async () => {
-      const response = await hpController.createOrUpdate('briv', dto);
-      expect(databaseMock['briv']).toEqual(response);
+      const response = await hpController.createOrUpdate('test', dto);
+      expect(databaseMock['test']).toEqual(response);
       expect(saveMock).toHaveBeenCalled();
-      expect(response._id).toBe('briv');
+      expect(response._id).toBe('test');
       expect(response.total).toBe(briv.hitPoints);
       expect(response.current).toBe(briv.hitPoints);
       expect(response.temporary).toBe(0);
@@ -124,7 +124,7 @@ describe('HpController', () => {
     });
 
     it('should respond with a 404 error if given id not found on GET', async () => {
-      expect(async () => await hpController.findById('briv')).rejects.toThrow();
+      expect(async () => await hpController.findById('test')).rejects.toThrow();
     });
   });
 

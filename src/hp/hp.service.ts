@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Hp } from './schemas/hp.schema';
 import type { Model } from 'mongoose';
@@ -7,10 +7,15 @@ import type { DamageType, DefenseType } from '../constants';
 import { DealDamageDto } from './dto/deal-damage.dto';
 import { HealDto } from './dto/heal.dto';
 import { AddTemporaryHitPointsDto } from './dto/add-temporary-hit-points.dto';
+import * as briv from '../../data/briv.json';
 
 @Injectable()
-export class HpService {
+export class HpService implements OnModuleInit {
   constructor(@InjectModel(Hp.name) private hpModel: Model<Hp>) {}
+
+  async onModuleInit() {
+    await this.createOrUpdate('briv', briv as CreateOrUpdateHpDto);
+  }
 
   async createOrUpdate(id: string, createOrUpdateHpDto: CreateOrUpdateHpDto) {
     const createOrUpdateParams = {

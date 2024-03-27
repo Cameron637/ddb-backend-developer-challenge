@@ -94,7 +94,7 @@ describe('AppController (e2e)', () => {
     });
 
     it('returns a 404 response when hp information does not exist for the given id', () => {
-      return request(app.getHttpServer()).get(url).expect(404);
+      return request(app.getHttpServer()).get('/hp/test').expect(404);
     });
   });
 
@@ -117,7 +117,7 @@ describe('AppController (e2e)', () => {
 
     it('returns a 404 response when given an invalid id', () => {
       return request(app.getHttpServer())
-        .post(url)
+        .post('/hp/test/deal-damage')
         .send(defaultDealDamageDto)
         .expect(404);
     });
@@ -148,7 +148,10 @@ describe('AppController (e2e)', () => {
     });
 
     it('returns a 404 response when given an invalid id', () => {
-      return request(app.getHttpServer()).post(url).send(dto).expect(404);
+      return request(app.getHttpServer())
+        .post('/hp/test/heal')
+        .send(dto)
+        .expect(404);
     });
 
     it('fails validation and responds with a 400 when given an invalid request body', async () => {
@@ -176,7 +179,10 @@ describe('AppController (e2e)', () => {
     });
 
     it('returns a 404 response when given an invalid id', () => {
-      return request(app.getHttpServer()).post(url).send(dto).expect(404);
+      return request(app.getHttpServer())
+        .post('/hp/test/add-temporary-hit-points')
+        .send(dto)
+        .expect(404);
     });
 
     it('fails validation and responds with a 400 when given an invalid request body', async () => {
