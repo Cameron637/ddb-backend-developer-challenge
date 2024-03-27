@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+docker pull mongo
+
+docker start ddb-backend-developer-challenge 2>/dev/null \
+|| docker run \
+        -p 27017:27017 \
+        --name ddb-backend-developer-challenge \
+        -d mongo:latest
